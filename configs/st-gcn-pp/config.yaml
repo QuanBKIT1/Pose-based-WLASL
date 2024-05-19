@@ -1,0 +1,70 @@
+Experiment_name: st_gcn_pp
+phase: train
+print_log: True
+save_interval: 1
+eval_interval: 1
+save_result: True
+show_topk: [1]
+num_worker: 2
+model_saved_dir: ./save_models/
+work_dir: ./work_dir/
+
+# feeder
+feeder: feeder.feeder.Feeder
+train_feeder_args:
+  data_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\train_data_joint.npy
+  label_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\train_label.pkl
+  random_choose: True
+  random_move: True
+  window_size: 120
+  # Append
+  random_shift: True
+  normalization: True
+  random_mirror: True
+  random_mirror_p: 0.5
+  is_vector: False
+
+test_feeder_args:
+  data_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\test_data_joint.npy
+  label_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\test_label.pkl
+  # Append
+  random_mirror: False
+  normalization: True
+
+val_feeder_args:
+  data_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\val_data_joint.npy
+  label_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\val_label.pkl
+  # Append
+  random_mirror: False
+  normalization: True
+
+# Input model shape: (64,2,120,27,2) - (batch_size, channel, temporal, vertices, number_person)
+
+# model
+model: model.stgcn_pp.stgcn_pp.Model
+model_args:
+  graph_cfg:
+    layout: "wlasl_hrnet"
+    mode: "spatial"
+  # type: STGCN
+  gcn_adaptive: init
+  gcn_with_res: True
+  tcn_type: mstcn
+  num_classes: 100
+  in_channels: 3
+
+# training
+batch_size: 64
+test_batch_size: 64
+
+weights: 0
+start_epoch: 0
+num_epoch: 100
+
+#optim
+optimizer: SGD
+base_lr: 0.1
+weight_decay: 0.0005
+nesterov: True
+# Set-up for annealing cosine Scheduler
+t_max: 100
