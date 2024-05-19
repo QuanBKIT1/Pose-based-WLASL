@@ -350,7 +350,8 @@ class Processor():
             if self.arg.save_result:
                 result_dict = dict(
                     zip(self.data_loader['test'].dataset.sample_name,
-                        self.result))
+                        self.result,
+                        self.label))
 
                 filename = 'test_result.pkl'
                 with open(os.path.join(self.arg.work_dir, filename), mode='wb') as f:
