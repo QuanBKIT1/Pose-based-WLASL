@@ -1,4 +1,4 @@
-Experiment_name: st_gcn_pp
+Experiment_name: st-gcn-pp
 phase: train
 print_log: True
 save_interval: 1
