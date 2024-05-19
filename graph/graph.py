@@ -67,7 +67,7 @@ class Graph:
     """
 
     def __init__(self,
-                 layout='coco',
+                 layout='wlasl_hrnet',
                  mode='spatial',
                  max_hop=1,
                  nx_node=1,
@@ -84,7 +84,8 @@ class Graph:
         self.nx_node = nx_node
 
         assert nx_node == 1 or mode == 'random', "nx_node can be > 1 only if mode is 'random'"
-        assert layout in ['openpose', 'nturgb+d', 'coco', 'handmp', 'wlasl_hrnet']
+        assert layout in ['openpose', 'nturgb+d',
+                          'coco', 'handmp', 'wlasl_hrnet']
 
         self.get_layout(layout)
         self.hop_dis = get_hop_distance(self.num_node, self.inward, max_hop)
@@ -133,18 +134,18 @@ class Graph:
         elif layout == 'wlasl_hrnet':
             self.num_node = 27
             neighbor_base = [(5, 6), (5, 7),
-                    (6, 8), (8, 10), (7, 9), (9, 11), 
-                    (12,13),(12,14),(12,16),(12,18),(12,20),
-                    (14,15),(16,17),(18,19),(20,21),
-                    (22,23),(22,24),(22,26),(22,28),(22,30),
-                    (24,25),(26,27),(28,29),(30,31),
-                    (10,12),(11,22)]
+                             (6, 8), (8, 10), (7, 9), (9, 11),
+                             (12, 13), (12, 14), (12, 16), (12, 18), (12, 20),
+                             (14, 15), (16, 17), (18, 19), (20, 21),
+                             (22, 23), (22, 24), (22, 26), (22, 28), (22, 30),
+                             (24, 25), (26, 27), (28, 29), (30, 31),
+                             (10, 12), (11, 22)]
             self.inward = [(i - 5, j - 5) for (i, j) in neighbor_base]
             self.center = 0
-            
+
         else:
             raise ValueError(f'Do Not Exist This Layout: {layout}')
-        
+
         self.self_link = [(i, i) for i in range(self.num_node)]
         self.outward = [(j, i) for (i, j) in self.inward]
         self.neighbor = self.inward + self.outward
