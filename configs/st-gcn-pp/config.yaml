@@ -43,15 +43,16 @@ val_feeder_args:
 # model
 model: model.stgcn_pp.stgcn_pp.Model
 model_args:
-  graph_cfg:
-    layout: "wlasl_hrnet"
-    mode: "spatial"
   # type: STGCN
   gcn_adaptive: init
   gcn_with_res: True
   tcn_type: mstcn
-  num_classes: 100
+  num_class: 100
   in_channels: 3
+  graph: graph.graph.Graph
+  graph_cfg:
+    layout: "wlasl_hrnet"
+    mode: "spatial"
 
 # training
 batch_size: 64

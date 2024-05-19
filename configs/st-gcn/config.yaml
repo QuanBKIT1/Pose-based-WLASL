@@ -44,7 +44,8 @@ val_feeder_args:
 model: model.stgcn.stgcn.Model
 model_args:
   in_channels: 3
-  num_classes: 100
+  num_class: 100
+  graph: graph.graph.Graph
   edge_importance_weighting: True
   graph_args:
     layout: "wlasl_hrnet"
