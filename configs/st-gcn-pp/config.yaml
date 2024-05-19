@@ -50,13 +50,13 @@ model_args:
   num_class: 100
   in_channels: 3
   graph: graph.graph.Graph
-  graph_cfg:
+  graph_args:
     layout: "wlasl_hrnet"
     mode: "spatial"
 
 # training
-batch_size: 64
-test_batch_size: 64
+batch_size: 1
+test_batch_size: 1
 
 weights: 0
 start_epoch: 0
