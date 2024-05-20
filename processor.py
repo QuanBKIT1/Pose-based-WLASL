@@ -355,8 +355,8 @@ class Processor():
                 filename = 'test_result.pkl'
                 with open(os.path.join(self.arg.work_dir, filename), mode='wb') as f:
                     pickle.dump(result_dict, f)
-                self.print_log("Save test result to ",
-                               os.path.join(self.arg.work_dir, filename))
+                self.print_log("Save test result to {}".format(os.path.join(self.arg.work_dir, filename))
+                               )
 
     def show_epoch_info(self):
         for k, v in self.epoch_info.items():
