@@ -25,7 +25,7 @@ class Processor():
         self.arg = arg
         self.model_saved_dir = os.path.join(
             self.arg.model_saved_dir, arg.Experiment_name)
-        self.arg.work_dir = os.path.join(
+        self.work_dir = os.path.join(
             self.arg.work_dir, arg.Experiment_name)
         self.save_arg()
 
@@ -35,13 +35,13 @@ class Processor():
             else:
                 os.makedirs(self.model_saved_dir, exist_ok=True)
 
-            if os.path.exists(self.arg.work_dir):
-                print('log_dir: ', self.arg.work_dir, 'already exist')
+            if os.path.exists(self.work_dir):
+                print('log_dir: ', self.work_dir, 'already exist')
             else:
-                os.makedirs(self.arg.work_dir, exist_ok=True)
+                os.makedirs(self.work_dir, exist_ok=True)
 
             self.training_info_file = os.path.join(
-                self.arg.work_dir, 'epoch_info_training.csv')
+                self.work_dir, 'epoch_info_training.csv')
             self.print_log('Save epoch results to {}'.format(
                 self.training_info_file), print_time=False)
 
@@ -63,10 +63,10 @@ class Processor():
         # save arg
         arg_dict = vars(self.arg)
 
-        if not os.path.exists(self.arg.work_dir):
-            os.makedirs(self.arg.work_dir)
+        if not os.path.exists(self.work_dir):
+            os.makedirs(self.work_dir)
 
-        with open('{}/config.yaml'.format(self.arg.work_dir), 'w') as f:
+        with open('{}/config.yaml'.format(self.work_dir), 'w') as f:
             yaml.dump(arg_dict, f)
 
     def load_data(self):
@@ -158,7 +158,7 @@ class Processor():
             str = "[ " + localtime + ' ] ' + str
         print(str)
         if self.arg.print_log:
-            with open('{}/log.txt'.format(self.arg.work_dir), 'a') as f:
+            with open('{}/log.txt'.format(self.work_dir), 'a') as f:
                 print(str, file=f)
 
     def record_time(self):
