@@ -306,7 +306,7 @@ class Processor():
                     # Save checkpoint best_acc
                     filename = 'best_acc.pt'
                     torch.save(self.model.state_dict(), os.path.join(
-                        self.model_saved_dir, filename))
+                        self.work_dir, filename))
                     self.print_log('Checkpoint best accuracy in epoch {}'.format(
                         epoch), print_time=False)
 
