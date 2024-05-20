@@ -3,7 +3,6 @@ phase: train
 print_log: True
 save_interval: 1
 eval_interval: 1
-save_result: True
 show_topk: [1]
 num_worker: 2
 model_saved_dir: ./save_models/

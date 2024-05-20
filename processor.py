@@ -346,18 +346,6 @@ class Processor():
                            .format(self.epoch_info['test_loss'], self.epoch_info['top1_acc'],
                                    self.epoch_info['top5_acc']))
 
-            # save the output of model
-            if self.arg.save_result:
-                result_dict = dict(
-                    zip(self.data_loader['test'].dataset.sample_name,
-                        (self.result, self.label)))
-
-                filename = 'test_result.pkl'
-                with open(os.path.join(self.arg.work_dir, filename), mode='wb') as f:
-                    pickle.dump(result_dict, f)
-                self.print_log("Save test result to {}".format(os.path.join(self.arg.work_dir, filename))
-                               )
-
     def show_epoch_info(self):
         for k, v in self.epoch_info.items():
             self.print_log('\t{}: {:.4f}'.format(k, v), print_time=False)
