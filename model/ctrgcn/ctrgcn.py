@@ -294,8 +294,9 @@ class Model(nn.Module):
             Graph = import_class(graph)
             self.graph = Graph(**graph_args)
 
-        A = self.graph.A  # 3, 27, 27
-
+        A = torch.tensor(self.graph.A, dtype=torch.float32,
+                    requires_grad=False)
+        
         self.num_class = num_class
         self.num_point = num_point
         self.data_bn = nn.BatchNorm1d(num_person * in_channels * num_point)
@@ -341,6 +342,8 @@ class Model(nn.Module):
         x = self.data_bn(x)
         x = x.view(N, M, V, C, T).permute(
             0, 1, 3, 4, 2).contiguous().view(N * M, C, T, V)
+        
+        # (N * M, C, T, V)
         x = self.l1(x)
         x = self.l2(x)
         x = self.l3(x)

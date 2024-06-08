@@ -85,7 +85,7 @@ class Graph:
 
         assert nx_node == 1 or mode == 'random', "nx_node can be > 1 only if mode is 'random'"
         assert layout in ['openpose', 'nturgb+d',
-                          'coco', 'handmp', 'wlasl_hrnet']
+                          'coco', 'handmp', 'wlasl_hrnet', 'wlasl-27-nla']
 
         self.get_layout(layout)
         self.hop_dis = get_hop_distance(self.num_node, self.inward, max_hop)
@@ -142,7 +142,11 @@ class Graph:
                              (10, 12), (11, 22)]
             self.inward = [(i - 5, j - 5) for (i, j) in neighbor_base]
             self.center = 0
-
+        elif layout == 'wlasl-27-nla':
+            self.inward = [(0, 1), (0, 2), (0, 3), (0, 4), (3, 5), (4, 6), (5, 7), (7, 8), (7, 9), (7, 11), (7, 13), (7, 15), (9, 10), (11, 12),
+                           (13, 14), (15, 16), (6, 17), (17, 18), (17, 19), (17, 21), (17, 23), (17, 25), (19, 20), (21, 22), (23, 24), (25, 26)]
+            self.center = 0
+            self.num_node = 27
         else:
             raise ValueError(f'Do Not Exist This Layout: {layout}')
 

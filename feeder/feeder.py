@@ -4,12 +4,14 @@ import pickle
 from torch.utils.data import Dataset
 import random
 
-flip_index = np.concatenate(([0, 2, 1, 4, 3, 6, 5], [17, 18, 19, 20, 21, 22, 23, 24, 25, 26], [
-                            7, 8, 9, 10, 11, 12, 13, 14, 15, 16]), axis=0)
+flip_index = {'27-sam-v1': np.concatenate(([0, 2, 1, 4, 3, 6, 5], [17, 18, 19, 20, 21, 22, 23, 24, 25, 26], [
+    7, 8, 9, 10, 11, 12, 13, 14, 15, 16]), axis=0),
+    '27-sam': np.array([0, 2, 1, 4, 3, 6, 5, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]),
+    '53-our': np.array([0, 2, 1, 4, 3, 6, 5, 9, 8, 7, 10, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])}
 
 
 class Feeder(Dataset):
-    def __init__(self, data_path, label_path,
+    def __init__(self, data_path, label_path, max_xy=256,
                  random_choose=False, random_shift=False, random_move=False,
                  window_size=-1, normalization=False, debug=False, use_mmap=True, random_mirror=False, random_mirror_p=0.5, is_vector=False):
         """
@@ -36,11 +38,22 @@ class Feeder(Dataset):
         self.use_mmap = use_mmap
         self.random_mirror = random_mirror
         self.random_mirror_p = random_mirror_p
+        self.max_xy = max_xy
         self.load_data()
         self.is_vector = is_vector
         if normalization:
             self.get_mean_map()
-        print(len(self.label))
+        print(f"""
+        Setting with:
+              random_choose: {random_choose},
+              random_shift: {random_shift} 
+              random_move: {random_move} 
+              window_size: {window_size} 
+              normalization: {normalization} 
+              max_width_height: {max_xy}
+              Joint mode: {self.data.shape[3]}
+        Load {len(self.label)} samples in {self.data_path} 
+""")
 
     def load_data(self):
         # data: N C V T M
@@ -56,14 +69,14 @@ class Feeder(Dataset):
 
         # load data
         if self.use_mmap:
-            self.data = np.load(self.data_path, mmap_mode='r')
+            self.data = np.load(self.data_path, mmap_mode='r').astype(np.float32)
         else:
-            self.data = np.load(self.data_path)
+            self.data = np.load(self.data_path).astype(np.float32)
         if self.debug:
             self.label = self.label[0:100]
             self.data = self.data[0:100]
             self.sample_name = self.sample_name[0:100]
-
+    
     def get_mean_map(self):
         data = self.data
         N, C, T, V, M = data.shape
@@ -88,12 +101,19 @@ class Feeder(Dataset):
 
         if self.random_mirror:
             if random.random() > self.random_mirror_p:
-                assert data_numpy.shape[2] == 27
-                data_numpy = data_numpy[:, :, flip_index, :]
+                if data_numpy.shape[2] == 27 and self.max_xy == 512:
+                    data_numpy = data_numpy[:, :, flip_index['27-sam-v1'], :]
+                if data_numpy.shape[2] == 53 and self.max_xy == 256:
+                    data_numpy = data_numpy[:, :, flip_index['27-sam'], :]
+                if data_numpy.shape[2] == 53:
+                    data_numpy = data_numpy[:, :, flip_index['53-our'], :]
+
                 if self.is_vector:
                     data_numpy[0, :, :, :] = - data_numpy[0, :, :, :]
                 else:
-                    data_numpy[0, :, :, :] = 512 - data_numpy[0, :, :, :]
+                    # data_numpy[0, :, :, :] = 512 - data_numpy[0, :, :, :]
+                    data_numpy[0, :, :, :] = self.max_xy - \
+                        data_numpy[0, :, :, :]
 
         if self.normalization:
             # data_numpy = (data_numpy - self.mean_map) / self.std_map
