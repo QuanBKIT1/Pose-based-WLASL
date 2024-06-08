@@ -294,8 +294,7 @@ class Model(nn.Module):
             Graph = import_class(graph)
             self.graph = Graph(**graph_args)
 
-        A = torch.tensor(self.graph.A, dtype=torch.float32,
-                    requires_grad=False)
+        A = self.graph.A
         
         self.num_class = num_class
         self.num_point = num_point
