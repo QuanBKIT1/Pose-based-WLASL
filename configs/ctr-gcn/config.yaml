@@ -22,6 +22,7 @@ train_feeder_args:
   random_mirror: True
   random_mirror_p: 0.5
   is_vector: False
+  max_xy: 256
 
 test_feeder_args:
   data_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\test_data_joint.npy
@@ -29,6 +30,7 @@ test_feeder_args:
   # Append
   random_mirror: False
   normalization: True
+  max_xy: 256
 
 val_feeder_args:
   data_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\val_data_joint.npy
@@ -36,6 +38,7 @@ val_feeder_args:
   # Append
   random_mirror: False
   normalization: True
+  max_xy: 256
 
 # model
 model: model.ctrgcn.ctrgcn.Model
