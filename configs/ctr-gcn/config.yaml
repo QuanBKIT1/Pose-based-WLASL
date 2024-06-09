@@ -45,7 +45,6 @@ model: model.ctrgcn.ctrgcn.Model
 model_args:
   in_channels: 3
   num_class: 100
-  num_point: 27
   num_person: 1
   graph: graph.graph.Graph
   graph_args:
