@@ -103,9 +103,9 @@ class Feeder(Dataset):
             if random.random() > self.random_mirror_p:
                 if data_numpy.shape[2] == 27 and self.max_xy == 512:
                     data_numpy = data_numpy[:, :, flip_index['27-sam-v1'], :]
-                if data_numpy.shape[2] == 53 and self.max_xy == 256:
+                if data_numpy.shape[2] == 27 and self.max_xy == 256:
                     data_numpy = data_numpy[:, :, flip_index['27-sam'], :]
-                if data_numpy.shape[2] == 53:
+                if data_numpy.shape[2] == 53 and self.max_xy == 256:
                     data_numpy = data_numpy[:, :, flip_index['53-our'], :]
 
                 if self.is_vector:
