@@ -8,6 +8,8 @@ flip_index = {'27-sam-v1': np.concatenate(([0, 2, 1, 4, 3, 6, 5], [17, 18, 19, 2
     7, 8, 9, 10, 11, 12, 13, 14, 15, 16]), axis=0),
     '27-sam': np.array([0, 2, 1, 4, 3, 6, 5, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]),
     '31-our': np.array([0, 2, 1, 4, 3, 6, 5, 9, 8, 7, 10, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]),
+    '49-our': np.array([0, 2, 1, 4, 3, 6, 5, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
+                        44, 45, 46, 47, 48, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]),
     '53-our': np.array([0, 2, 1, 4, 3, 6, 5, 9, 8, 7, 10, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])}
 
 
@@ -70,14 +72,15 @@ class Feeder(Dataset):
 
         # load data
         if self.use_mmap:
-            self.data = np.load(self.data_path, mmap_mode='r').astype(np.float32)
+            self.data = np.load(
+                self.data_path, mmap_mode='r').astype(np.float32)
         else:
             self.data = np.load(self.data_path).astype(np.float32)
         if self.debug:
             self.label = self.label[0:100]
             self.data = self.data[0:100]
             self.sample_name = self.sample_name[0:100]
-    
+
     def get_mean_map(self):
         data = self.data
         N, C, T, V, M = data.shape
@@ -110,6 +113,8 @@ class Feeder(Dataset):
                     data_numpy = data_numpy[:, :, flip_index['53-our'], :]
                 elif data_numpy.shape[2] == 31 and self.max_xy == 256:
                     data_numpy = data_numpy[:, :, flip_index['31-our'], :]
+                elif data_numpy.shape[2] == 49 and self.max_xy == 256:
+                    data_numpy = data_numpy[:, :, flip_index['49-our'], :]
                 
                 if self.is_vector:
                     data_numpy[0, :, :, :] = - data_numpy[0, :, :, :]
@@ -138,11 +143,15 @@ class Feeder(Dataset):
             else:
                 cor_shift = 20
             if self.is_vector:
-                data_numpy[0, :, 0, :] += random.random() * cor_shift * 2 - cor_shift
-                data_numpy[1, :, 0, :] += random.random() * cor_shift * 2 - cor_shift
+                data_numpy[0, :, 0, :] += random.random() * \
+                    cor_shift * 2 - cor_shift
+                data_numpy[1, :, 0, :] += random.random() * \
+                    cor_shift * 2 - cor_shift
             else:
-                data_numpy[0, :, :, :] += random.random() * cor_shift * 2 - cor_shift
-                data_numpy[1, :, :, :] += random.random() * cor_shift * 2 - cor_shift
+                data_numpy[0, :, :, :] += random.random() * \
+                    cor_shift * 2 - cor_shift
+                data_numpy[1, :, :, :] += random.random() * \
+                    cor_shift * 2 - cor_shift
 
         # if self.random_shift:
         #     data_numpy = tools.random_shift(data_numpy)
