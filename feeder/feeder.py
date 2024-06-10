@@ -133,12 +133,16 @@ class Feeder(Dataset):
                     data_numpy[1, :, 0, 0].mean(axis=0)
 
         if self.random_shift:
-            if self.is_vector:
-                data_numpy[0, :, 0, :] += random.random() * 20 - 10.0
-                data_numpy[1, :, 0, :] += random.random() * 20 - 10.0
+            if self.max_xy == 256:
+                cor_shift = 10
             else:
-                data_numpy[0, :, :, :] += random.random() * 20 - 10.0
-                data_numpy[1, :, :, :] += random.random() * 20 - 10.0
+                cor_shift = 20
+            if self.is_vector:
+                data_numpy[0, :, 0, :] += random.random() * cor_shift * 2 - cor_shift
+                data_numpy[1, :, 0, :] += random.random() * cor_shift * 2 - cor_shift
+            else:
+                data_numpy[0, :, :, :] += random.random() * cor_shift * 2 - cor_shift
+                data_numpy[1, :, :, :] += random.random() * cor_shift * 2 - cor_shift
 
         # if self.random_shift:
         #     data_numpy = tools.random_shift(data_numpy)
