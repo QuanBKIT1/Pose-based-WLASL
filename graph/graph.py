@@ -85,7 +85,7 @@ class Graph:
 
         assert nx_node == 1 or mode == 'random', "nx_node can be > 1 only if mode is 'random'"
         assert layout in ['openpose', 'nturgb+d',
-                          'coco', 'handmp', 'wlasl_hrnet', 'wlasl-27-nla', 'wlasl-53-nla']
+                          'coco', 'handmp', 'wlasl_hrnet', 'wlasl-27-nla', 'wlasl-31-nla', 'wlasl-53-nla']
 
         self.get_layout(layout)
         self.hop_dis = get_hop_distance(self.num_node, self.inward, max_hop)
@@ -147,6 +147,11 @@ class Graph:
                            (13, 14), (15, 16), (6, 17), (17, 18), (17, 19), (17, 21), (17, 23), (17, 25), (19, 20), (21, 22), (23, 24), (25, 26)]
             self.center = 0
             self.num_node = 27
+        elif layout == 'wlasl-31-nla':
+            self.inward = [(0, 1), (0, 2), (0, 3), (0, 4), (3, 5), (4, 6), (7, 8), (7, 10), (8, 9), (9, 10), (5, 11), (11, 12), (11, 13), (11, 15), (11, 17), (
+                11, 19), (13, 14), (15, 16), (17, 18), (19, 20), (6, 21), (21, 22), (21, 23), (21, 25), (21, 27), (21, 29), (23, 24), (25, 26), (27, 28), (29, 30)]
+            self.center = 0
+            self.num_node = 31
 
         elif layout == 'wlasl-53-nla':
             self.inward = [(0, 1), (0, 2), (0, 3), (0, 4), (3, 5), (4, 6), (7, 8), (7, 10), (8, 9), (9, 10), (5, 11), (11, 12), (11, 16), (11, 20), (11, 24), (11, 28), (12, 13), (13, 14), (14, 15), (16, 17), (17, 18), (18, 19), (20, 21), (21, 22), (22, 23), (24, 25), (

@@ -7,6 +7,7 @@ import random
 flip_index = {'27-sam-v1': np.concatenate(([0, 2, 1, 4, 3, 6, 5], [17, 18, 19, 20, 21, 22, 23, 24, 25, 26], [
     7, 8, 9, 10, 11, 12, 13, 14, 15, 16]), axis=0),
     '27-sam': np.array([0, 2, 1, 4, 3, 6, 5, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]),
+    '31-our': np.array([0, 2, 1, 4, 3, 6, 5, 9, 8, 7, 10, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]),
     '53-our': np.array([0, 2, 1, 4, 3, 6, 5, 9, 8, 7, 10, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])}
 
 
@@ -103,11 +104,13 @@ class Feeder(Dataset):
             if random.random() > self.random_mirror_p:
                 if data_numpy.shape[2] == 27 and self.max_xy == 512:
                     data_numpy = data_numpy[:, :, flip_index['27-sam-v1'], :]
-                if data_numpy.shape[2] == 27 and self.max_xy == 256:
+                elif data_numpy.shape[2] == 27 and self.max_xy == 256:
                     data_numpy = data_numpy[:, :, flip_index['27-sam'], :]
-                if data_numpy.shape[2] == 53 and self.max_xy == 256:
+                elif data_numpy.shape[2] == 53 and self.max_xy == 256:
                     data_numpy = data_numpy[:, :, flip_index['53-our'], :]
-
+                elif data_numpy.shape[2] == 31 and self.max_xy == 256:
+                    data_numpy = data_numpy[:, :, flip_index['31-our'], :]
+                
                 if self.is_vector:
                     data_numpy[0, :, :, :] = - data_numpy[0, :, :, :]
                 else:
