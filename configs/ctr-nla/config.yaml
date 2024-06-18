@@ -1,0 +1,71 @@
+Experiment_name: ctr-gcn
+phase: train
+print_log: True
+save_interval: 1
+eval_interval: 1
+show_topk: [1]
+num_worker: 2
+model_saved_dir: ./save_models/
+work_dir: ./work_dir/
+
+# feeder
+feeder: feeder.feeder.Feeder
+word_embedding: D:\DATN\project\data\preprocessed_data\keypoints_NLA_WLASL\wlasl_word_embeddings.pkl
+vocab: D:\DATN\project\data\preprocessed_data\wlasl_class_list.txt
+train_feeder_args:
+  data_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\train_data_joint.npy
+  label_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\train_label.pkl
+  random_choose: True
+  random_move: True
+  window_size: 120
+  # Append
+  random_shift: True
+  normalization: True
+  random_mirror: True
+  random_mirror_p: 0.5
+  is_vector: False
+
+test_feeder_args:
+  data_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\test_data_joint.npy
+  label_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\test_label.pkl
+  # Append
+  random_mirror: False
+  normalization: True
+
+val_feeder_args:
+  data_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\val_data_joint.npy
+  label_path: D:\DATN\project\data\preprocessed_data\skeleton\WLASL100\val_label.pkl
+  # Append
+  random_mirror: False
+  normalization: True
+
+# model
+model: model.ctrgcn.Model
+model_args:
+  in_channels: 3
+  num_class: 2000
+  num_point: 27
+  num_person: 1
+  graph: graph.graph.Graph
+  graph_args:
+    layout: "wlasl_hrnet"
+    mode: "spatial"
+  head_args:
+    top_k: 2000
+# training
+batch_size: 32
+test_batch_size: 32
+
+weights: 0
+start_epoch: 0
+num_epoch: 100
+
+#optim
+optimizer: SGD
+base_lr: 0.1
+weight_decay: 0.0005
+nesterov: True
+# Set-up for annealing cosine Scheduler
+t_max: 100
+
+mu_base: 0.99
