@@ -284,7 +284,7 @@ class TCN_GCN_unit(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, num_class=60, num_point=25, num_person=2, graph=None, graph_args=dict(), in_channels=3,
+    def __init__(self, num_class=60, num_person=2, graph=None, graph_args=dict(), in_channels=3,
                  drop_out=0, adaptive=True, word_emb_tab=None, head_args=dict()):
         super(Model, self).__init__()
 
@@ -297,10 +297,10 @@ class Model(nn.Module):
         A = self.graph.A  # 3, 27, 27
 
         self.num_class = num_class
-        self.num_point = num_point
+        self.num_point = A.shape[1]
         self.word_emb_tab = word_emb_tab
 
-        self.data_bn = nn.BatchNorm1d(num_person * in_channels * num_point)
+        self.data_bn = nn.BatchNorm1d(num_person * in_channels * self.num_point)
 
         base_channel = 64
         self.l1 = TCN_GCN_unit(in_channels, base_channel,

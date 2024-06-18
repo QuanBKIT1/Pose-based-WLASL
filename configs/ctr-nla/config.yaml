@@ -40,11 +40,10 @@ val_feeder_args:
   normalization: True
 
 # model
-model: model.ctrgcn.Model
+model: model.ctrnla.ctrnla.Model
 model_args:
   in_channels: 3
   num_class: 2000
-  num_point: 27
   num_person: 1
   graph: graph.graph.Graph
   graph_args:
