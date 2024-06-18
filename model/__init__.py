@@ -1,1 +1,1 @@
-from . import ctrgcn, stgcn, stgcn_pp
+from . import ctrgcn, stgcn, stgcn_pp, ctrnla
