@@ -1,6 +1,5 @@
 #custom
 tmp*
-data
 config_v0/*
 backup/*
 .vscode
