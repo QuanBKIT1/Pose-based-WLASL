@@ -48,6 +48,8 @@ class Processor():
 
         # Load word embedding
         if self.arg.Experiment_name == 'ctr-nla':
+            self.device = torch.device(
+            "cuda:0" if torch.cuda.is_available() else "cpu")
             with open(self.arg.word_embedding, mode='rb') as f:
                 word_embedding = pickle.load(f)
             with open(arg.vocab, mode='r') as f:
