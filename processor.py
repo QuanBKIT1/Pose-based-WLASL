@@ -16,7 +16,6 @@ import pickle
 from model.utils.loss import LabelSmoothCE
 
 
-
 class Processor():
     """
         Processor for Pose-based training and testing
@@ -60,6 +59,7 @@ class Processor():
                     vocab.append(gloss)
             self.word_emb_tab = torch.tensor(
                 np.array([word_embedding[word] for word in vocab])).to(self.device)
+            print("Load word_embedding and vocab")
 
         self.load_model()
         self.load_optimizer()
@@ -118,7 +118,7 @@ class Processor():
         Model = import_class(self.arg.model)
         if self.arg.Experiment_name == 'ctr-nla':
             self.model = Model(**self.arg.model_args,
-                word_emb_tab=self.word_emb_tab)
+                               word_emb_tab=self.word_emb_tab)
         else:
             self.model = Model(**self.arg.model_args)
 
@@ -129,6 +129,7 @@ class Processor():
             self.model = nn.DataParallel(self.model)
 
         self.model.to(self.device)
+        
         if self.arg.Experiment_name == 'ctr-nla':
             self.loss = LabelSmoothCE(
                 word_emb_tab=self.word_emb_tab).to(self.device)
