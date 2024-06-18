@@ -13,6 +13,8 @@ import pandas as pd
 import yaml
 import csv
 import pickle
+from model.utils.loss import LabelSmoothCE
+
 
 
 class Processor():
@@ -44,6 +46,20 @@ class Processor():
                 self.work_dir, 'epoch_info_training.csv')
             self.print_log('Save epoch results to {}'.format(
                 self.training_info_file), print_time=False)
+
+        # Load word embedding
+        if self.arg.Experiment_name == 'ctr-nla':
+            with open(self.arg.word_embedding, mode='rb') as f:
+                word_embedding = pickle.load(f)
+            with open(arg.vocab, mode='r') as f:
+                lines = f.readlines()
+                vocab = []
+                for line in lines:
+                    data = line.split('\t')
+                    gloss = data[1].rstrip()
+                    vocab.append(gloss)
+            self.word_emb_tab = torch.tensor(
+                np.array([word_embedding[word] for word in vocab])).to(self.device)
 
         self.load_model()
         self.load_optimizer()
@@ -100,7 +116,11 @@ class Processor():
     def load_model(self):
 
         Model = import_class(self.arg.model)
-        self.model = Model(**self.arg.model_args)
+        if self.arg.Experiment_name == 'ctr-nla':
+            self.model = Model(**self.arg.model_args,
+                word_emb_tab=self.word_emb_tab)
+        else:
+            self.model = Model(**self.arg.model_args)
 
         self.device = torch.device(
             "cuda:0" if torch.cuda.is_available() else "cpu")
@@ -109,7 +129,11 @@ class Processor():
             self.model = nn.DataParallel(self.model)
 
         self.model.to(self.device)
-        self.loss = nn.CrossEntropyLoss().to(self.device)
+        if self.arg.Experiment_name == 'ctr-nla':
+            self.loss = LabelSmoothCE(
+                word_emb_tab=self.word_emb_tab).to(self.device)
+        else:
+            self.loss = nn.CrossEntropyLoss().to(self.device)
 
         if self.arg.weights:
             weights = torch.load(self.arg.weights)

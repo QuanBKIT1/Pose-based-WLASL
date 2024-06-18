@@ -1,10 +1,11 @@
 import math
+import pdb
 
 import numpy as np
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
-from .Visualhead import VisualHead
+# from .Visualhead import VisualHead
 
 
 def import_class(name):
@@ -334,10 +335,10 @@ class Model(nn.Module):
 
         self.pool = nn.AdaptiveAvgPool2d(1)
         self.vision_feature = 256
-        self.head = VisualHead(num_class=self.num_class, input_size=self.vision_feature,
-                               word_emb_tab=self.word_emb_tab, **head_args)
+        # self.head = VisualHead(num_class=self.num_class, input_size=self.vision_feature,
+        #                        word_emb_tab=self.word_emb_tab, head_args=head_args)
 
-    def forward(self, x, label=None, is_training=False):
+    def forward(self, x):
         if len(x.shape) == 3:
             N, T, VC = x.shape
             x = x.view(N, T, self.num_point, -1).permute(0,
@@ -363,13 +364,15 @@ class Model(nn.Module):
 
         # N*M,C,T,V
         x = x.view(N, M, self.vision_feature, -1, V)
+
         # N,M,C,V,T
         x = self.pool(x)
         # N, M, C, 1, 1
         x = x.reshape(N, M, self.vision_feature)
+
         x = x.mean(dim=1)
+
         # Output of vision feature: N, C
-
-        output_fc1, output_fc2, topk_idx = self.head(x, label, is_training)
-
-        return output_fc1, output_fc2, topk_idx
+        x = self.fc(x)
+        # x = self.head(x,labels)
+        return x
