@@ -136,7 +136,7 @@ class Processor():
             self.loss = LabelSmoothCE(
                 word_emb_tab=self.word_emb_tab).to(self.device)
         else:
-            self.loss = nn.CrossEntropyLoss().to(self.device)
+            self.loss = nn.CrossEntropyLoss(label_smoothing=self.arg.label_smoothing).to(self.device)
 
         if self.arg.weights:
             weights = torch.load(self.arg.weights)
