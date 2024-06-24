@@ -129,8 +129,8 @@ class Processor():
         self.model.to(self.device)
 
         if 'nla' in self.arg.Experiment_name:
-            self.loss = LabelSmoothCE(
-                word_emb_tab=self.word_emb_tab).to(self.device)
+            self.loss = LabelSmoothCE(epsilon=self.arg.label_smoothing,
+                                      word_emb_tab=self.word_emb_tab).to(self.device)
             print("Using Natural Language Aware")
         else:
             self.loss = nn.CrossEntropyLoss(
