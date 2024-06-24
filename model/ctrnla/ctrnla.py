@@ -286,7 +286,7 @@ class TCN_GCN_unit(nn.Module):
 
 class Model(nn.Module):
     def __init__(self, num_class=60, num_person=2, graph=None, graph_args=dict(), in_channels=3,
-                 drop_out=0, adaptive=True, word_emb_tab=None, head_args=dict()):
+                 drop_out=0, adaptive=True, head_args=dict()):
         super(Model, self).__init__()
 
         if graph is None:
@@ -299,7 +299,6 @@ class Model(nn.Module):
 
         self.num_class = num_class
         self.num_point = A.shape[1]
-        self.word_emb_tab = word_emb_tab
 
         self.data_bn = nn.BatchNorm1d(num_person * in_channels * self.num_point)
 
@@ -335,8 +334,6 @@ class Model(nn.Module):
 
         self.pool = nn.AdaptiveAvgPool2d(1)
         self.vision_feature = 256
-        # self.head = VisualHead(num_class=self.num_class, input_size=self.vision_feature,
-        #                        word_emb_tab=self.word_emb_tab, head_args=head_args)
 
     def forward(self, x):
         if len(x.shape) == 3:

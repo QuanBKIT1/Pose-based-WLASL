@@ -47,9 +47,9 @@ class Processor():
                 self.training_info_file), print_time=False)
 
         # Load word embedding
-        if self.arg.Experiment_name == 'ctr-nla':
+        if 'nla' in self.arg.Experiment_name:
             self.device = torch.device(
-            "cuda:0" if torch.cuda.is_available() else "cpu")
+                "cuda:0" if torch.cuda.is_available() else "cpu")
             with open(self.arg.word_embedding, mode='rb') as f:
                 word_embedding = pickle.load(f)
             with open(arg.vocab, mode='r') as f:
@@ -118,11 +118,7 @@ class Processor():
     def load_model(self):
 
         Model = import_class(self.arg.model)
-        if self.arg.Experiment_name == 'ctr-nla':
-            self.model = Model(**self.arg.model_args,
-                               word_emb_tab=self.word_emb_tab)
-        else:
-            self.model = Model(**self.arg.model_args)
+        self.model = Model(**self.arg.model_args)
 
         self.device = torch.device(
             "cuda:0" if torch.cuda.is_available() else "cpu")
@@ -131,12 +127,13 @@ class Processor():
             self.model = nn.DataParallel(self.model)
 
         self.model.to(self.device)
-        
-        if self.arg.Experiment_name == 'ctr-nla':
+
+        if 'nla' in self.arg.Experiment_name:
             self.loss = LabelSmoothCE(
                 word_emb_tab=self.word_emb_tab).to(self.device)
         else:
-            self.loss = nn.CrossEntropyLoss(label_smoothing=self.arg.label_smoothing).to(self.device)
+            self.loss = nn.CrossEntropyLoss(
+                label_smoothing=self.arg.label_smoothing).to(self.device)
 
         if self.arg.weights:
             weights = torch.load(self.arg.weights)
